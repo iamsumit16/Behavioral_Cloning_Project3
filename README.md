@@ -21,7 +21,7 @@ To meet specifications, the project will require submitting five files:
 
 This README file describes how to output the video in the "Details About Files In This Directory" section.
 
-Introduction
+1. Introduction
 ---
 This project asks us to apply the deep neural networks (convolutional network) to have a car drive itself autonomously using the Udacity simulator application. The simulator has training and autonomous modes. In the training mode, we can drive the vehicle on the given two tracks and record the data which consists of three set of images from three cameras mounted on left, center and right of the vehicle and a driving log .csv file which has the three images' paths, steering command, throttle command, brake and speed. For this project we will just be predicting steering command from the taken picture data and let the drive.py handle brake, throttle and speed/
 
@@ -36,6 +36,7 @@ Pipeline for this project consists of following steps:
 * Driving the vehicle in autonomous mode and making a video of it
 * Conculsion and discussion
 
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/O40y31LoV0s/0.jpg)](http://www.youtube.com/watch?v=O40y31LoV0s "Video Title")
 
 Collecting data from the simulator and using Udacity data
 ---
@@ -45,15 +46,43 @@ Preprocessing the data
 ---
 In this step I read all the paths of images (center, left and right) in an array and all the corresponding steering angle commands in another. For using left and right camera, I have added a correction factor of 0.20(+.20 for left and -.20 for right image) which means that the car needs to recover to right if its veering to the left side and it needs to correct its position to left if going to right.
 
-![alt text](https://github.com/iamsumit16/Udacity-CarND_Behavioral_Cloning_Project3/blob/master/data.png)
-                                Data distribution after adding correction factor to left and right images 
-
+![alt text](https://github.com/iamsumit16/Udacity-CarND_Behavioral_Cloning_Project3/blob/master/data.png "Data distribution after adding correction factor to left and right images")
+                                
 I've included further processing like cropping the image to remove the unwanted part of the image like above the horizon or the hood part of the car in bottom of image and also, adding random brightness/darkness and shadow masks to the images to help model generalize better. This part of processing is a part of the generator function since I am not dealing with reading or storing the huge image data outside the generator to save the memory.
 
 Implementing the Generator in Keras
 ---
+Keras generators are a useful way to load the data one batch a time rather than loading it all at once. It takes in the arguments - image paths, angles and batch size. It reads the images using the image_paths array and angles and shuffles the data initially. 
+Then I apply the image processing as mentioned above to the images and append them all together. Next, for the steering angle commands more than 0.20 I flip the images and reverse the angle sign and append them again. This helps in generating more data for angles other than straight (zero deg) and would also serve as data if the car had to drive in opposite to direction on the track for which the data was actually recorded. Each of the produced images and corresponding angles is added to a list and when the lengths of the lists reach batch_size the lists are converted to numpy arrays and yielded to the calling generator from the model. Finally, the lists are reset to allow another batch to be built and image_paths and angles are again shuffled. 
+The generator feeds the model as it makes requests and then destroys it and goes over again until all the data is fed to the model.
+Here's how the preprocessing of the data looks like before being fed and getting cropped in the model architecture.
+![alt text](https://github.com/iamsumit16/Udacity-CarND_Behavioral_Cloning_Project3/blob/master/process1.png)
+![alt text](https://github.com/iamsumit16/Udacity-CarND_Behavioral_Cloning_Project3/blob/master/process2.png)
+![alt text](https://github.com/iamsumit16/Udacity-CarND_Behavioral_Cloning_Project3/blob/master/pro3.png)
+
+Defining the model architecture
+---
+I have used here the [nVidia net](https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf) which was provided as one of the advanced architectures for end-to-end learning for self driving cars. However, the original model was trained over the images of size 66x200, I have used the image size as it was generated from the simulator.
+NVidia Model:
+![alt text](https://github.com/iamsumit16/Udacity-CarND_Behavioral_Cloning_Project3/blob/master/nvidiaNet.png)
+
+Training, saving and running the model
+---
+The model was trained using model.fit() command in Keras for 20 epochs and it generated about 32000 test images to train over and about 8000 images to validate over. I used model.save command to save the model weight n .h5 format. The model training summary and losses are as below:
 
 
+
+
+
+
+
+![alt text](https://github.com/iamsumit16/Udacity-CarND_Behavioral_Cloning_Project3/blob/master/loss.png)
+
+
+
+
+### Directions from Udacity on requirements, how to make the model and run it:
+---
 
 Creating a Great Writeup
 ---
