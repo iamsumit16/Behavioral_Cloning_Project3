@@ -36,7 +36,7 @@ Pipeline for this project consists of following steps:
 * Driving the vehicle in autonomous mode and making a video of it
 * Conculsion and discussion
 
-![IMAGE ALT TEXT](https://gifs.com/gif/behavior-cloning-autonomous-run-riverside-track-and-jungle-track-gLqmKGhttps://gifs.com/gif/behavior-cloning-autonomous-run-riverside-track-and-jungle-track-gLqmKG)
+![IMAGE ALT TEXT](https://j.gifs.com/gLqmKG.gif)
 
 Collecting data from the simulator and using Udacity data
 ---
