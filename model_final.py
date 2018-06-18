@@ -123,7 +123,7 @@ def generate_data( image_paths, angles, batch_size = 128):
                   
                  
             # flip horizontally and invert steer angle, if magnitude is > 0.20
-            if abs(angle) > 0.25:
+            if abs(angle) > 0.20:
                 img = cv2.flip(img, 1)
                 angle *= -1
                 X.append(img)
@@ -187,10 +187,10 @@ print(model.summary())
 
 # Save model data
 json_string = model.to_json()
-with open('./modelcopy3.json', 'w') as f:
+with open('./model3.json', 'w') as f:
  f.write(json_string)
 
-model.save('modelcopy3.h5')
+model.save('model3.h5')
 
 # plot training and validation loses
 print(history.history.keys())
