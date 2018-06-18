@@ -45,7 +45,7 @@ Preprocessing the data
 ---
 In this step I read all the paths of images (center, left and right) in an array and all the corresponding steering angle commands in another. For using left and right camera, I have added a correction factor of 0.20(+.20 for left and -.20 for right image) which means that the car needs to recover to right if its veering to the left side and it needs to correct its position to left if going to right.
 
-!(Data distribution after adding correction factor to left and right images)[https://github.com/iamsumit16/Udacity-CarND_Behavioral_Cloning_Project3/blob/master/data.png]
+![](https://github.com/iamsumit16/Udacity-CarND_Behavioral_Cloning_Project3/blob/master/data.png"Data distribution after adding correction factor to left and right images")
 
 I've included further processing like cropping the image to remove the unwanted part of the image like above the horizon or the hood part of the car in bottom of image and also, adding random brightness/darkness and shadow masks to the images to help model generalize better. This part of processing is a part of the generator function since I am not dealing with reading or storing the huge image data outside the generator to save the memory.
 
