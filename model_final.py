@@ -3,7 +3,7 @@
 
 # In[1]:
 
-
+# Importing all the modules needed 
 import csv
 import cv2
 import numpy as np
@@ -21,56 +21,41 @@ import matplotlib.pyplot as plt
 from keras.callbacks import ModelCheckpoint, Callback
 
 
-# In[2]:
-
-
+# Specifying the paths for images and driving log obtained from the simulator and udacity data
 img_path = './IMG/'
 csv_path = './driving_log.csv'
+
 
 image_paths = []
 angles = []
 
-
-# In[3]:
-
-
-
+# Reading the data from the driving log
 with open('./driving_log.csv', newline = '') as csvfile:
     driving_data = list(csv.reader(csvfile, skipinitialspace=True, delimiter=',', quoting=csv.QUOTE_NONE))
  
     for row in driving_data[1:]:
-        if float(row[6]) < 0.1:
+        if float(row[6]) < 0.1:                                # Ignore the data where velocity is less than 0.1 when car is not moving
             continue
         image_paths.append(img_path + row[0].split('/')[-1])
         angles.append(float(row[3]))
-        image_paths.append(img_path + row[1].split('/')[-1])
-        angles.append(float(row[3]) + 0.25)
+        image_paths.append(img_path + row[1].split('/')[-1])   
+        angles.append(float(row[3]) + 0.25)                    # adding correction factor to steer angles in order to use left camera images
         image_paths.append(img_path + row[2].split('/')[-1])
-        angles.append(float(row[3]) - 0.25)
+        angles.append(float(row[3]) - 0.25)                    # adding correction factor to steer angles in order to use right camera images
     
-image_paths = np.array(image_paths)
+image_paths = np.array(image_paths)                            # all the image paths for center, left and right images together 
 angles = np.array(angles)
-
-
-# In[4]:
-
-
 print( image_paths.shape, angles.shape)
 
 
-# In[5]:
-
-
-num_bins = 23
+# Looking at the distribution of steering angle data
+num_bins = 17
 avg_samples_per_bin = len(angles)/num_bins
 hist, bins = np.histogram(angles, num_bins)
 width = 0.7 * (bins[1] - bins[0])
 center = (bins[:-1] + bins[1:]) / 2
 plt.bar(center, hist, align='center', width=width)
 plt.plot((np.min(angles), np.max(angles)))
-
-
-# In[6]:
 
 
 def brightness_process(image):
@@ -107,18 +92,16 @@ def shadow_augmentation(image):
 
 def process_images(img):
     image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)		# convert BGR to RGB
-    image = brightness_process(image)						# brightness process
-    image = shadow_augmentation(image)
+    image = brightness_process(image)					# brightness process
+    image = shadow_augmentation(image)                  # adding random shadow mask on the image
  
     return image 
 
 
 
 
-# In[7]:
 
-
-
+# Function to use for the Keras Generator
 def generate_data( image_paths, angles, batch_size = 128):
     image_paths, angles = shuffle(image_paths, angles)
     X,y = ([],[])                            
@@ -150,12 +133,7 @@ def generate_data( image_paths, angles, batch_size = 128):
                     X, y = ([],[])
                     image_paths, angles = shuffle(image_paths, angles)           
 
-
-
-# In[8]:
-
-
-print('Initialize Network Parameters')
+# Covnet Archtiteture, using the nVidia model with image sizes as obtained from simulator
 def nVidiaModel():
     """
     Creates nVidia model
@@ -176,35 +154,21 @@ def nVidiaModel():
     return model
 
 
-# In[9]:
 
-
-# Reading images locations.
+# Splitting data into train and validation set
 image_paths_train, image_paths_val, angles_train, angles_val = train_test_split(image_paths, angles, test_size=0.2, random_state=23)
-
-
-# In[10]:
-
-
 print(image_paths_train.shape, angles_train.shape, image_paths_val.shape, angles_val.shape)
 print(len(image_paths_train))
 
-
-# In[11]:
-
-
-# Splitting samples and creating generators.
-
-                                
+                        
 # Model Initialization
 model = nVidiaModel()
 
 # Compiling and training the model
 model.compile(loss='mse', optimizer='adam')     
-                    
+
 train_gen = generate_data(image_paths_train, angles_train, batch_size=64)
 val_gen = generate_data(image_paths_val, angles_val, batch_size=64)
-
 
 batch_size = 64
 samples_per_epoch = (len(image_paths_train)//batch_size)*batch_size
@@ -215,10 +179,9 @@ nb_val_samples = len(image_paths_val)
 # In[12]:
 
 
-
+# Using the genertor to train the network
 history = model.fit_generator(train_gen, validation_data=val_gen, nb_val_samples=nb_val_samples, samples_per_epoch=samples_per_epoch, 
                                nb_epoch=20, verbose=1)
-
 
 print(model.summary())  
 
@@ -227,16 +190,9 @@ json_string = model.to_json()
 with open('./modelcopy3.json', 'w') as f:
  f.write(json_string)
 
-
-# In[14]:
-
-
 model.save('modelcopy3.h5')
 
-
-# In[16]:
-
-
+# plot training and validation loses
 print(history.history.keys())
 plt.plot(history.history['loss'])
 plt.plot(history.history['val_loss'])
