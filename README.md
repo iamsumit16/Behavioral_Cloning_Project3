@@ -21,6 +21,39 @@ To meet specifications, the project will require submitting five files:
 
 This README file describes how to output the video in the "Details About Files In This Directory" section.
 
+Introduction
+---
+This project asks us to apply the deep neural networks (convolutional network) to have a car drive itself autonomously using the Udacity simulator application. The simulator has training and autonomous modes. In the training mode, we can drive the vehicle on the given two tracks and record the data which consists of three set of images from three cameras mounted on left, center and right of the vehicle and a driving log .csv file which has the three images' paths, steering command, throttle command, brake and speed. For this project we will just be predicting steering command from the taken picture data and let the drive.py handle brake, throttle and speed/
+
+We'll train the model developed using Keras and save the model information in a model.h5 file. 
+ 
+Pipeline for this project consists of following steps:
+* Collecting data from the simulator and using Udacity data
+* Preprocessing the data
+* Implementing a Generartor in Keras
+* Define the model architecture
+* Training and saving the model
+* Driving the vehicle in autonomous mode and making a video of it
+* Conculsion and discussion
+
+
+Collecting data from the simulator and using Udacity data
+---
+Udacity has provided an image dataset and associated driving log file. Along with that I have also taken additional data by driving the vehicle on test tracks to produce the conditions of recovering back straight to the track when we are veered off the track and start approaching the curb. It allows model to learn the behavior on how to recover otherwise it might drive off the track or roll-over (in case of track two).
+
+Preprocessing the data
+---
+In this step I read all the paths of images (center, left and right) in an array and all the corresponding steering angle commands in another. For using left and right camera, I have added a correction factor of 0.20(+.20 for left and -.20 for right image) which means that the car needs to recover to right if its veering to the left side and it needs to correct its position to left if going to right.
+
+!(Data distribution after adding correction factor to left and right images)[https://github.com/iamsumit16/Udacity-CarND_Behavioral_Cloning_Project3/blob/master/data.png]
+
+I've included further processing like cropping the image to remove the unwanted part of the image like above the horizon or the hood part of the car in bottom of image and also, adding random brightness/darkness and shadow masks to the images to help model generalize better. This part of processing is a part of the generator function since I am not dealing with reading or storing the huge image data outside the generator to save the memory.
+
+Implementing the Generator in Keras
+---
+
+
+
 Creating a Great Writeup
 ---
 A great writeup should include the [rubric points](https://review.udacity.com/#!/rubrics/432/view) as well as your description of how you addressed each point.  You should include a detailed description of the code used (with line-number references and code snippets where necessary), and links to other supporting documents or external references.  You should include images in your writeup to demonstrate how your code works with examples.  
