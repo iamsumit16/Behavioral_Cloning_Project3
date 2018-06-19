@@ -37,6 +37,7 @@ Pipeline for this project consists of following steps:
 * Conculsion and discussion
 
 ![IMAGE ALT TEXT](https://j.gifs.com/gLqmKG.gif)
+<iframe width="420" height="315" src="ttps://www.youtube.com/watch?v=q7IJNIrmJ90&feature=youtu.be" frameborder="0" allowfullscreen></iframe>
 
 Collecting data from the simulator and using Udacity data
 ---
