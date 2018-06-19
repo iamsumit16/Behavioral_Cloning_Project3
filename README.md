@@ -21,6 +21,10 @@ To meet specifications, the project will require submitting five files:
 
 This README file describes how to output the video in the "Details About Files In This Directory" section.
 
+Embedded Youtube Video for autonomous mode driving on the two tracks
+---
+[![Behavioral Cloning](http://img.youtube.com/vi/q7IJNIrmJ90/0.jpg)](https://www.youtube.com/watch?v=q7IJNIrmJ90 "Behavioral Cloning")
+
 1. Introduction
 ---
 This project asks us to apply the deep neural networks (convolutional network) to have a car drive itself autonomously using the Udacity simulator application. The simulator has training and autonomous modes. In the training mode, we can drive the vehicle on the given two tracks and record the data which consists of three set of images from three cameras mounted on left, center and right of the vehicle and a driving log .csv file which has the three images' paths, steering command, throttle command, brake and speed. For this project we will just be predicting steering command from the taken picture data and let the drive.py handle brake, throttle and speed/
@@ -35,9 +39,6 @@ Pipeline for this project consists of following steps:
 * Training and saving the model
 * Driving the vehicle in autonomous mode and making a video of it
 * Conculsion and discussion
-
-![IMAGE ALT TEXT](https://j.gifs.com/gLqmKG.gif)
-<iframe width="420" height="315" src="https://www.youtube.com/watch?v=q7IJNIrmJ90&feature=youtu.be" frameborder="0" allowfullscreen></iframe>
 
 Collecting data from the simulator and using Udacity data
 ---
